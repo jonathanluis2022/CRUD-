@@ -13,7 +13,7 @@ if(count($_POST) > 0 ) { //indices do array, só vai postar si for maior que Zer
     $telefone = $_POST['telefone'];
 
     if(empty($nome)) {
-        $erro = "preencha o nome ";
+        $erro = "preencha o nome completo ";
     }
     if(empty($email) || !filter_var($email , FILTER_VALIDATE_EMAIL)) {
         $erro = "preencha um email valided";
