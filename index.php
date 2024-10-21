@@ -33,19 +33,20 @@ if(count($_POST) > 0 ) { //indices do array, só vai postar si for maior que Zer
             }
         }
  
-    if($erro) {
-        echo "<p><b> $erro </b></p>";
-    }else {
-        $sql_code = "INSERT INTO pessoas (nome, email, telefone, nascimento, data)
-        VALUES('$nome', '$email', '$telefone', '$nascimento', NOW())";
-         $deu_certo = $mysqli->query($sql_code) or die($mysqli->error);
-         if($deu_certo) {
-             echo 'Cliente Cadastrado com sucesso ';
-             unset($_POST);//  aqui no final ele vai limpar todos os input 
-         }else {
-
-         }
-    }
+        if($erro) {
+            echo "<p><b> $erro </b></p>";
+        } else {
+            $sql_code = "INSERT INTO pessoas (nome, email, telefone, nascimento, data)
+            VALUES('$nome', '$email', '$telefone', '$nascimento', NOW())";
+        
+            if ($mysqli->query($sql_code) === TRUE) {
+                echo '<div id="success-message" class="alert alert-success">Cliente cadastrado com sucesso!</div>';
+                unset($_POST); // Limpa os dados do formulário
+            } else {
+                echo '<div class="alert alert-danger">Erro ao cadastrar: ' . $mysqli->error . '</div>';
+            }
+        }
+        
 }
 ?>
 
@@ -54,37 +55,80 @@ if(count($_POST) > 0 ) { //indices do array, só vai postar si for maior que Zer
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crud</title>
+    <title>CRUD com Layout Fixo</title>
+    <!-- Link do Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Cadastro Crud</h1>
+    <!-- Cabeçalho -->
+    <header>
+        <h1>Cadastrar</h1>
+    </header>
 
-    <a href="cliente.php"> Voltar para Inicial</a>
+    <!-- Menu de links Lateral -->
+    <div class="sidebar">
+        <h4>Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Cadastrar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="clientes.php">Listar</a>
+            </li>
+        </ul>
+    </div>
 
-    <form action="" method="post">
-        <p>
-            <label for="" > Nome : </label>
-            <input value= "<?php if(isset($_POST['nome'])) echo $_POST['nome'];?>" type="text" name="nome">
-        </p>
+    <!-- Conteudo -->
+    <div class="content">
+        <!-- Formulário de Cadastro -->
+        <form action="" method="post">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input value= "<?php if(isset($_POST['nome'])) echo $_POST['nome'];?>" type="text" name="nome" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <input value= "<?php if(isset($_POST['email'])) echo $_POST['email'];?>" type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="nascimento" class="form-label">Nascimento</label>
+                <input value= "<?php if(isset($_POST['nascimento'])) echo $_POST['nascimento'];?>" type="date" name="nascimento" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input value= "<?php if(isset($_POST['telefone'])) echo $_POST['telefone'];?>" type="tel" name="telefone" class="form-control" placeholder="1998888-8888" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
 
-        <p>
-            <label for="" > Email : </label>
-            <input value= "<?php if(isset($_POST['email'])) echo $_POST['email'];?>" type="text" name="email">
-        </p>
+        <!-- Mensagem de sucesso vai aparecer aqui -->
+        <?php
+        if (isset($deu_certo) && $deu_certo) {
+            echo '<div id="success-message" class="alert alert-success">Cliente cadastrado com sucesso!</div>';
+        }
+        ?>
 
-        <p>
-            <label for="" > Nascimento  : </label>
-            <input value= "<?php if(isset($_POST['nascimento'])) echo $_POST['nascimento'];?>" type="text" name="nascimento">
-        </p>
+    </div>
 
-        <p>
-            <label for="" > Telefone : </label>
-            <input value= "<?php if(isset($_POST['telefone'])) echo $_POST['telefone'];?>" placeholder = "1998888-8888" type="text" name="telefone">
-        </p>
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2024 - CRUD PHP</p>
+    </footer>
 
-        <button type="submit"> Enviar </button>
-    </form>
-        
+    <!-- Link do Bootstrap JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Script para esconder a mensagem de sucesso após 3 segundos -->
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 3000); // Oculta a mensagem após 3 segundos
+    </script>
 </body>
 </html>
